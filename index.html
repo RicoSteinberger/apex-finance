@@ -8,6 +8,11 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
+  <!-- SDKs do Firebase (Versão Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
   <style>
     @media print {
       body * { visibility: hidden; }
@@ -27,14 +32,54 @@
 </head>
 <body class="bg-gray-100 font-sans text-gray-800">
 
-  <div class="flex h-screen overflow-hidden">
+  <!-- TELA DE AUTHENTICAÇÃO (LOGIN / REGISTRO) -->
+  <div id="auth-container" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
+      <div class="text-center mb-6">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-full mb-3 text-indigo-600">
+          <i class="fa-solid fa-wallet text-3xl"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900">Apex Finance</h2>
+        <p class="text-sm text-gray-500 mt-1">Acesse sua conta para sincronizar seus dados</p>
+      </div>
+
+      <form id="form-auth" onsubmit="tratarAutenticacao(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 mb-1">E-MAIL</label>
+          <input type="email" id="auth-email" required placeholder="seu@email.com" class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-500 mb-1">SENHA</label>
+          <input type="password" id="auth-senha" required placeholder="••••••••" class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+        </div>
+
+        <div id="auth-erro" class="text-xs font-semibold text-rose-600 hidden bg-rose-50 p-2.5 rounded-lg border border-rose-100"></div>
+
+        <button type="submit" id="btn-auth-submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg text-sm transition shadow-md">
+          Entrar no Sistema
+        </button>
+      </form>
+
+      <div class="mt-6 border-t border-gray-100 pt-4 text-center">
+        <p class="text-xs text-gray-500">
+          <span id="auth-toggle-msg">Ainda não tem conta?</span>
+          <button onclick="alternarModoAuth()" id="btn-auth-toggle" class="text-indigo-600 font-bold hover:underline ml-1">Criar nova conta</button>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- APLICAÇÃO PRINCIPAL (INICIALMENTE OCULTA) -->
+  <div id="app-container" class="flex h-screen overflow-hidden hidden">
 
     <!-- Sidebar / Menu Lateral -->
     <aside class="w-64 bg-slate-900 text-white flex flex-col justify-between no-print">
       <div>
-        <div class="p-6 border-b border-slate-800 flex items-center gap-3">
-          <i class="fa-solid fa-wallet text-indigo-400 text-2xl"></i>
-          <span class="text-xl font-bold tracking-wide">Apex Finance</span>
+        <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid fa-wallet text-indigo-400 text-2xl"></i>
+            <span class="text-xl font-bold tracking-wide">Apex Finance</span>
+          </div>
         </div>
         <nav class="p-4 space-y-2">
           <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left bg-indigo-600 text-white font-medium transition">
@@ -91,6 +136,10 @@
       </div>
       
       <div class="p-4 space-y-2 border-t border-slate-800">
+        <div class="px-2 py-1 text-xs text-slate-400 truncate" id="user-display-email">...</div>
+        <button onclick="fazerLogout()" class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-left text-slate-300 hover:bg-slate-800 hover:text-white font-medium transition text-sm">
+          <i class="fa-solid fa-right-from-bracket w-4 text-rose-400"></i> Sair da Conta
+        </button>
         <button onclick="exportarBackup()" class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-left text-slate-400 hover:bg-slate-800 hover:text-white font-medium transition text-sm">
           <i class="fa-solid fa-download w-4"></i> Exportar Dados
         </button>
@@ -943,26 +992,138 @@
   </div>
 
   <script>
-    let contas = JSON.parse(localStorage.getItem('finapp_contas')) || [];
-    
-    let cartoes = JSON.parse(localStorage.getItem('finapp_cartoes')) || [
+    // ==========================================
+    // CONFIGURAÇÃO DO FIREBASE (SUBSTITUA AQUI COM SUAS CHAVES)
+    // ==========================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyA0ritL3ALlsQk_kbwjnZfQ-VZK-jxQGx8",
+	  authDomain: "apex-finance-3a5ae.firebaseapp.com",
+      databaseURL: "https://apex-finance-3a5ae-default-rtdb.firebaseio.com",
+      projectId: "apex-finance-3a5ae",
+      storageBucket: "apex-finance-3a5ae.firebasestorage.app",
+      messagingSenderId: "261384088029",
+      appId: "1:261384088029:web:ff62f48846af90716c6e34",
+      measurementId: "G-L34CVRJLZM"
+    };
+
+    // Inicializa Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    let currentUser = null;
+    let modoCriarConta = false;
+
+    // Estruturas de dados em memória
+    let contas = [];
+    let cartoes = [
       { id: 1, nome: "Cartão Principal", limite: 10000, fechamento: 8, vencimento: 15, cor: "from-indigo-900 to-indigo-600", final: "0001" },
       { id: 2, nome: "Cartão Secundário", limite: 5000, fechamento: 18, vencimento: 25, cor: "from-slate-900 to-slate-700", final: "0002" }
     ];
-
-    let categorias = JSON.parse(localStorage.getItem('finapp_categorias')) || [
+    let categorias = [
       "Alimentação", "Renda Extra", "Salário", "Transporte", "Lazer", "Outros", "Cartão de Crédito", "Empréstimo"
     ];
-
-    let subcategorias = JSON.parse(localStorage.getItem('finapp_subcategorias')) || {
+    let subcategorias = {
       "Alimentação": ["Supermercado", "Restaurante", "Delivery"],
       "Transporte": ["Combustível", "Uber/99", "Manutenção"],
       "Lazer": ["Cinema", "Viagens", "Streaming"],
       "Cartão de Crédito": ["Ajustes e Créditos"]
     };
-
-    let transacoes = JSON.parse(localStorage.getItem('finapp_transacoes')) || [];
+    let transacoes = [];
     let transacaoParaExcluir = null;
+
+    // GERENCIAMENTO DE AUTENTICAÇÃO
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        currentUser = user;
+        document.getElementById('auth-container').classList.add('hidden');
+        document.getElementById('app-container').classList.remove('hidden');
+        document.getElementById('user-display-email').innerText = user.email;
+
+        // Ouvinte em Tempo Real no Banco de Dados do Usuário
+        db.ref('usuarios/' + user.uid).on('value', snapshot => {
+          const data = snapshot.val();
+          if (data) {
+            contas = data.contas || [];
+            cartoes = data.cartoes || [];
+            categorias = data.categorias || [];
+            subcategorias = data.subcategorias || {};
+            transacoes = data.transacoes || [];
+          } else {
+            // Salva os valores padrão caso seja o primeiro acesso
+            salvarStorage();
+          }
+          atualizarTela();
+          popularSelectBaixaCartao();
+          carregarFaturasBaixa();
+        });
+      } else {
+        currentUser = null;
+        document.getElementById('auth-container').classList.remove('hidden');
+        document.getElementById('app-container').classList.add('hidden');
+      }
+    });
+
+    function alternarModoAuth() {
+      modoCriarConta = !modoCriarConta;
+      const btnSubmit = document.getElementById('btn-auth-submit');
+      const toggleMsg = document.getElementById('auth-toggle-msg');
+      const btnToggle = document.getElementById('btn-auth-toggle');
+      const divErro = document.getElementById('auth-erro');
+
+      divErro.classList.add('hidden');
+
+      if (modoCriarConta) {
+        btnSubmit.innerText = "Criar Conta";
+        toggleMsg.innerText = "Já tem uma conta?";
+        btnToggle.innerText = "Fazer login";
+      } else {
+        btnSubmit.innerText = "Entrar no Sistema";
+        toggleMsg.innerText = "Ainda não tem conta?";
+        btnToggle.innerText = "Criar nova conta";
+      }
+    }
+
+    function tratarAutenticacao(e) {
+      e.preventDefault();
+      const email = document.getElementById('auth-email').value;
+      const senha = document.getElementById('auth-senha').value;
+      const divErro = document.getElementById('auth-erro');
+
+      divErro.classList.add('hidden');
+
+      if (modoCriarConta) {
+        auth.createUserWithEmailAndPassword(email, senha)
+          .catch(err => {
+            divErro.innerText = "Erro ao criar conta: " + err.message;
+            divErro.classList.remove('hidden');
+          });
+      } else {
+        auth.signInWithEmailAndPassword(email, senha)
+          .catch(err => {
+            divErro.innerText = "Falha no login: E-mail ou senha incorretos.";
+            divErro.classList.remove('hidden');
+          });
+      }
+    }
+
+    function fazerLogout() {
+      if (confirm("Deseja encerrar a sessão?")) {
+        auth.signOut();
+      }
+    }
+
+    function salvarStorage() {
+      if (!currentUser) return;
+      
+      db.ref('usuarios/' + currentUser.uid).set({
+        contas,
+        cartoes,
+        categorias,
+        subcategorias,
+        transacoes
+      });
+    }
 
     document.addEventListener("DOMContentLoaded", () => {
       const hoje = new Date();
@@ -993,32 +1154,13 @@
       document.getElementById('cat-data-fim').value = ultimoDia;
 
       toggleTipoSelect();
-      atualizarTela();
-      popularSelectBaixaCartao();
-      carregarFaturasBaixa();
     });
-
-    function salvarStorage() {
-      localStorage.setItem('finapp_contas', JSON.stringify(contas));
-      localStorage.setItem('finapp_cartoes', JSON.stringify(cartoes));
-      localStorage.setItem('finapp_categorias', JSON.stringify(categorias));
-      localStorage.setItem('finapp_subcategorias', JSON.stringify(subcategorias));
-      localStorage.setItem('finapp_transacoes', JSON.stringify(transacoes));
-    }
 
     function zerarBancoDados() {
       if (confirm("Tem certeza absoluta que deseja zerar o banco de dados?")) {
         if (confirm("Esta ação é irreversível. Deseja continuar?")) {
-          localStorage.removeItem('finapp_contas');
-          localStorage.removeItem('finapp_cartoes');
-          localStorage.removeItem('finapp_categorias');
-          localStorage.removeItem('finapp_subcategorias');
-          localStorage.removeItem('finapp_transacoes');
           contas = []; cartoes = []; categorias = []; subcategorias = {}; transacoes = [];
           salvarStorage();
-          atualizarTela();
-          popularSelectBaixaCartao();
-          carregarFaturasBaixa();
           alert("Banco de dados zerado com sucesso.");
         }
       }
@@ -1051,9 +1193,6 @@
             subcategorias = dados.subcategorias || {};
             transacoes = dados.transacoes;
             salvarStorage();
-            atualizarTela();
-            popularSelectBaixaCartao();
-            carregarFaturasBaixa();
             alert("Dados restaurados com sucesso!");
           } else {
             alert("Formato de arquivo inválido.");
@@ -1166,7 +1305,6 @@
       }
 
       salvarStorage();
-      atualizarTela();
       closeModalConta();
     }
 
@@ -1183,7 +1321,6 @@
       if (confirm(`Tem certeza que deseja excluir a conta "${contaObj.banco}"?`)) {
         contas = contas.filter(c => c.id !== id);
         salvarStorage();
-        atualizarTela();
       }
     }
 
@@ -1360,8 +1497,6 @@
       }
 
       salvarStorage();
-      atualizarTela();
-      carregarFaturasBaixa();
       closeModalBaixaFatura();
 
       alert("Fatura baixada com sucesso!");
@@ -2329,7 +2464,6 @@
       }
 
       salvarStorage();
-      atualizarTela();
       closeModalTransacao();
       
       if(!document.getElementById('tab-relatorios').classList.contains('hidden')) gerarRelatorio();
@@ -2346,8 +2480,6 @@
         transacao.pago = !transacao.pago;
         transacao.dataPagamento = transacao.pago ? new Date().toISOString().split('T')[0] : null;
         salvarStorage();
-        atualizarTela();
-        if(!document.getElementById('tab-baixafatura').classList.contains('hidden')) carregarFaturasBaixa();
       }
     }
 
@@ -2359,8 +2491,6 @@
         if (confirm("Tem certeza que deseja excluir este lançamento?")) {
           transacoes = transacoes.filter(t => t.id !== id);
           salvarStorage();
-          atualizarTela();
-          if(!document.getElementById('tab-baixafatura').classList.contains('hidden')) carregarFaturasBaixa();
         }
       }
     }
@@ -2380,8 +2510,6 @@
       }
 
       salvarStorage();
-      atualizarTela();
-      if(!document.getElementById('tab-baixafatura').classList.contains('hidden')) carregarFaturasBaixa();
       closeModalExcluirParcela();
     }
 
@@ -2439,9 +2567,6 @@
       }
 
       salvarStorage();
-      atualizarTela();
-      popularSelectBaixaCartao();
-      carregarFaturasBaixa();
       closeModalCartao();
     }
 
@@ -2455,9 +2580,6 @@
       if (confirm("Tem certeza que deseja excluir este cartão?")) {
         cartoes = cartoes.filter(c => c.id !== id);
         salvarStorage();
-        atualizarTela();
-        popularSelectBaixaCartao();
-        carregarFaturasBaixa();
       }
     }
 
@@ -2483,7 +2605,6 @@
       categorias.sort((a, b) => a.localeCompare(b, 'pt-BR', { sensitivity: 'accent' }));
       if (!subcategorias[nome]) subcategorias[nome] = [];
       salvarStorage();
-      atualizarTela();
       closeModalCategoria();
     }
 
@@ -2492,7 +2613,6 @@
         categorias = categorias.filter(c => c !== nome);
         delete subcategorias[nome];
         salvarStorage();
-        atualizarTela();
       }
     }
 
@@ -2527,7 +2647,6 @@
       subcategorias[pai].push(nome);
       subcategorias[pai].sort((a, b) => a.localeCompare(b, 'pt-BR', { sensitivity: 'accent' }));
       salvarStorage();
-      atualizarTela();
       closeModalSubcategoria();
     }
 
@@ -2535,7 +2654,6 @@
       if (confirm(`Tem certeza que deseja excluir a subcategoria "${subNome}"?`)) {
         subcategorias[catPai] = subcategorias[catPai].filter(s => s !== subNome);
         salvarStorage();
-        atualizarTela();
       }
     }
 
