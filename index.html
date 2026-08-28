@@ -1179,37 +1179,39 @@
       downloadAnchorNode.remove();
     }
 
-    function importarBackup(event) {
-      const file = event.target.files[0];
-      if (!file) return;
+function importarBackup(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const dados = JSON.parse(e.target.result);
       
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const dados = JSON.parse(e.target.result);
-          
-          if (dados.transacoes || dados.contas || dados.cartoes) {
-            contas = dados.contas || [];
-            cartoes = dados.cartoes || [];
-            categorias = dados.categorias || [
-              "Alimentação", "Renda Extra", "Salário", "Transporte", "Lazer", "Outros", "Cartão de Crédito", "Empréstimo"
-            ];
-            subcategorias = dados.subcategorias || {};
-            transacoes = dados.transacoes || [];
+      // Valida se o objeto contém pelo menos uma das chaves principais de dados
+      if (dados && (dados.transacoes || dados.contas || dados.cartoes || dados.categorias)) {
+        contas = dados.contas || [];
+        cartoes = dados.cartoes || [];
+        categorias = dados.categorias || [
+          "Alimentação", "Renda Extra", "Salário", "Transporte", "Lazer", "Outros", "Cartão de Crédito", "Empréstimo"
+        ];
+        subcategorias = dados.subcategorias || {};
+        transacoes = dados.transacoes || [];
 
-            salvarStorage();
-            alert("Dados restaurados e sincronizados com a nuvem com sucesso!");
-          } else {
-            alert("O arquivo selecionado não contém dados válidos do Apex Finance.");
-          }
-        } catch (error) {
-          console.error(error);
-          alert("Erro ao ler o arquivo de backup. Verifique se o arquivo é um JSON válido.");
-        }
-        event.target.value = '';
-      };
-      reader.readAsText(file);
+        // Grava os dados importados direto no Firebase e atualiza a interface
+        salvarStorage();
+        alert("Dados restaurados e sincronizados com a nuvem com sucesso!");
+      } else {
+        alert("O arquivo selecionado não contém uma estrutura válida do Apex Finance.");
+      }
+    } catch (error) {
+      console.error("Erro na leitura do backup:", error);
+      alert("Erro ao ler o arquivo de backup. Verifique se o arquivo está corrompido.");
     }
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
 
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
