@@ -32,7 +32,7 @@
 </head>
 <body class="bg-gray-100 font-sans text-gray-800">
 
-  <!-- TELA DE AUTHENTICAÇÃO (LOGIN / REGISTRO) -->
+  <!-- TELA DE AUTENTICAÇÃO -->
   <div id="auth-container" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
       <div class="text-center mb-6">
@@ -69,7 +69,7 @@
     </div>
   </div>
 
-  <!-- APLICAÇÃO PRINCIPAL (INICIALMENTE OCULTA) -->
+  <!-- APLICAÇÃO PRINCIPAL -->
   <div id="app-container" class="flex h-screen overflow-hidden hidden">
 
     <!-- Sidebar / Menu Lateral -->
@@ -156,7 +156,7 @@
     <!-- Conteúdo Principal -->
     <main class="flex-1 overflow-y-auto p-8">
 
-      <!-- ABA 1: DASHBOARD -->
+      <!-- DASHBOARD -->
       <section id="tab-dashboard" class="tab-content space-y-6">
         <header class="flex justify-between items-center">
           <div>
@@ -220,7 +220,7 @@
         </div>
       </section>
 
-      <!-- ABA 2: TRANSAÇÕES -->
+      <!-- TRANSAÇÕES -->
       <section id="tab-transacoes" class="tab-content hidden space-y-6">
         <header class="flex justify-between items-center">
           <div>
@@ -232,7 +232,6 @@
           </button>
         </header>
 
-        <!-- BARRA DE FILTROS DO HISTÓRICO -->
         <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
           <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div>
@@ -278,7 +277,7 @@
         </div>
       </section>
 
-      <!-- ABA DE CONTAS -->
+      <!-- CONTAS -->
       <section id="tab-contas" class="tab-content hidden space-y-6">
         <header class="flex justify-between items-center">
           <div>
@@ -295,7 +294,7 @@
         </div>
       </section>
 
-      <!-- ABA 3.1: GESTÃO DE CARTÕES DE CRÉDITO -->
+      <!-- GESTÃO DE CARTÕES -->
       <section id="tab-cartoes" class="tab-content hidden space-y-6">
         <header class="flex justify-between items-center">
           <div>
@@ -316,7 +315,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="lista-cartoes-fisicos"></div>
       </section>
 
-      <!-- ABA 3.2: BAIXA DE FATURA -->
+      <!-- BAIXA DE FATURA -->
       <section id="tab-baixafatura" class="tab-content hidden space-y-6">
         <header class="flex justify-between items-center">
           <div>
@@ -367,7 +366,7 @@
         </div>
       </section>
 
-      <!-- ABA 4: CATEGORIAS E SUBCATEGORIAS -->
+      <!-- CATEGORIAS -->
       <section id="tab-categorias" class="tab-content hidden space-y-6">
         <header class="flex justify-between items-center">
           <div>
@@ -389,7 +388,7 @@
         </div>
       </section>
       
-      <!-- SUB-ABA 5.1: RELATÓRIO DE CONTAS A PAGAR -->
+      <!-- RELATÓRIO CONTAS A PAGAR -->
       <section id="tab-relatorios" class="tab-content hidden space-y-6">
         <header class="flex justify-between items-center no-print">
           <div>
@@ -448,7 +447,7 @@
         </div>
       </section>
 
-      <!-- SUB-ABA 5.2: EXTRATO CONSOLIDADO MENSAL -->
+      <!-- EXTRATO CONSOLIDADO -->
       <section id="tab-extrato" class="tab-content hidden space-y-6">
         <header class="flex justify-between items-center no-print">
           <div>
@@ -509,7 +508,7 @@
         </div>
       </section>
 
-      <!-- SUB-ABA 5.3: EXTRATO PROJETADO MENSAL -->
+      <!-- EXTRATO PROJETADO -->
       <section id="tab-projetado" class="tab-content hidden space-y-6">
         <header class="flex justify-between items-center no-print">
           <div>
@@ -570,7 +569,7 @@
         </div>
       </section>
 
-      <!-- SUB-ABA 5.4: FATURA DETALHADA -->
+      <!-- FATURA DETALHADA -->
       <section id="tab-faturacartao" class="tab-content hidden space-y-6">
         <header class="flex justify-between items-center no-print">
           <div>
@@ -621,7 +620,7 @@
         </div>
       </section>
 
-      <!-- SUB-ABA 5.5: RELATÓRIO DE DESPESAS POR CATEGORIA E SUBCATEGORIA -->
+      <!-- DESPESAS POR CATEGORIA -->
       <section id="tab-despesascategoria" class="tab-content hidden space-y-6">
         <header class="flex justify-between items-center no-print">
           <div>
@@ -701,7 +700,6 @@
           <input type="text" id="descricao" required placeholder="Ex: TV, Supermercado, Salário, Resgate" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
         </div>
 
-        <!-- SELEÇÃO DE CONTA DE ORIGEM (TRANSFERÊNCIAS) -->
         <div id="box-origem-transferencia" class="hidden">
           <label class="block text-xs font-semibold text-gray-500 mb-1">CONTA DE ORIGEM</label>
           <select id="origem-transferencia" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
@@ -709,10 +707,9 @@
           </select>
         </div>
 
-        <!-- SELEÇÃO DE CONTA (RECEITAS, DESPESAS E TRANSFERÊNCIAS) -->
         <div id="box-destino-receita">
           <label id="lbl-destino-receita" class="block text-xs font-semibold text-gray-500 mb-1">CONTA DE DESTINO</label>
-          <select id="destino-receita" required class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+          <select id="destino-receita" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
             <option value="CARTEIRA" selected>CARTEIRA (Dinheiro físico)</option>
           </select>
         </div>
@@ -802,7 +799,7 @@
     </div>
   </div>
 
-  <!-- MODAL CONTA BANCÁRIA -->
+  <!-- MODAL CONTA -->
   <div id="modal-conta" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 relative">
       <div class="flex justify-between items-center mb-4">
@@ -831,6 +828,7 @@
     </div>
   </div>
 
+  <!-- MODAL BAIXA FATURA -->
   <div id="modal-baixa-fatura" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative">
       <div class="flex justify-between items-center mb-4">
@@ -863,6 +861,7 @@
     </div>
   </div>
 
+  <!-- MODAL EXCLUIR PARCELA -->
   <div id="modal-excluir-parcela" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative">
       <div class="flex items-center gap-3 text-amber-600 mb-3">
@@ -888,6 +887,7 @@
     </div>
   </div>
 
+  <!-- MODAL CARTÃO -->
   <div id="modal-cartao" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative">
       <div class="flex justify-between items-center mb-4">
@@ -944,6 +944,7 @@
     </div>
   </div>
 
+  <!-- MODAL CATEGORIA -->
   <div id="modal-categoria" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 relative">
       <div class="flex justify-between items-center mb-4">
@@ -965,6 +966,7 @@
     </div>
   </div>
 
+  <!-- MODAL SUBCATEGORIA -->
   <div id="modal-subcategoria" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 relative">
       <div class="flex justify-between items-center mb-4">
@@ -992,9 +994,6 @@
   </div>
 
   <script>
-    // ==========================================
-    // CONFIGURAÇÃO DO FIREBASE (SUBSTITUA AQUI COM SUAS CHAVES)
-    // ==========================================
     const firebaseConfig = {
       apiKey: "AIzaSyA0ritL3ALlsQk_kbwjnZfQ-VZK-jxQGx8",
       authDomain: "apex-finance-3a5ae.firebaseapp.com",
@@ -1006,7 +1005,6 @@
       measurementId: "G-L34CVRJLZM"
     };
 
-    // Inicializa Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.database();
@@ -1014,7 +1012,6 @@
     let currentUser = null;
     let modoCriarConta = false;
 
-    // Estruturas de dados em memória
     let contas = [];
     let cartoes = [
       { id: 1, nome: "Cartão Principal", limite: 10000, fechamento: 8, vencimento: 15, cor: "from-indigo-900 to-indigo-600", final: "0001" },
@@ -1032,7 +1029,6 @@
     let transacoes = [];
     let transacaoParaExcluir = null;
 
-    // GERENCIAMENTO DE AUTENTICAÇÃO
     auth.onAuthStateChanged(user => {
       if (user) {
         currentUser = user;
@@ -1040,7 +1036,6 @@
         document.getElementById('app-container').classList.remove('hidden');
         document.getElementById('user-display-email').innerText = user.email;
 
-        // Ouvinte em Tempo Real no Banco de Dados do Usuário
         db.ref('usuarios/' + user.uid).on('value', snapshot => {
           const data = snapshot.val();
           if (data) {
@@ -1050,7 +1045,6 @@
             subcategorias = data.subcategorias || {};
             transacoes = data.transacoes || [];
           } else {
-            // Salva os valores padrão caso seja o primeiro acesso
             salvarStorage();
           }
           atualizarTela();
@@ -1179,39 +1173,39 @@
       downloadAnchorNode.remove();
     }
 
-function importarBackup(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const dados = JSON.parse(e.target.result);
+    function importarBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
       
-      // Valida se o objeto contém pelo menos uma das chaves principais de dados
-      if (dados && (dados.transacoes || dados.contas || dados.cartoes || dados.categorias)) {
-        contas = dados.contas || [];
-        cartoes = dados.cartoes || [];
-        categorias = dados.categorias || [
-          "Alimentação", "Renda Extra", "Salário", "Transporte", "Lazer", "Outros", "Cartão de Crédito", "Empréstimo"
-        ];
-        subcategorias = dados.subcategorias || {};
-        transacoes = dados.transacoes || [];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const conteudo = e.target.result;
+          const dados = JSON.parse(conteudo);
+          
+          if (dados && (dados.transacoes || dados.contas || dados.cartoes || dados.categorias)) {
+            contas = Array.isArray(dados.contas) ? dados.contas : [];
+            cartoes = Array.isArray(dados.cartoes) ? dados.cartoes : [];
+            categorias = Array.isArray(dados.categorias) ? dados.categorias : [
+              "Alimentação", "Renda Extra", "Salário", "Transporte", "Lazer", "Outros", "Cartão de Crédito", "Empréstimo"
+            ];
+            subcategorias = (typeof dados.subcategorias === 'object' && dados.subcategorias !== null) ? dados.subcategorias : {};
+            transacoes = Array.isArray(dados.transacoes) ? dados.transacoes : [];
 
-        // Grava os dados importados direto no Firebase e atualiza a interface
-        salvarStorage();
-        alert("Dados restaurados e sincronizados com a nuvem com sucesso!");
-      } else {
-        alert("O arquivo selecionado não contém uma estrutura válida do Apex Finance.");
-      }
-    } catch (error) {
-      console.error("Erro na leitura do backup:", error);
-      alert("Erro ao ler o arquivo de backup. Verifique se o arquivo está corrompido.");
+            salvarStorage();
+            atualizarTela();
+            alert("Dados restaurados e sincronizados com a nuvem com sucesso!");
+          } else {
+            alert("O arquivo selecionado não contém uma estrutura válida do Apex Finance.");
+          }
+        } catch (error) {
+          console.error("Erro na restauração:", error);
+          alert("Erro ao ler o arquivo de backup. Verifique se o arquivo está corrompido.");
+        }
+        event.target.value = '';
+      };
+      reader.readAsText(file, "UTF-8");
     }
-    event.target.value = '';
-  };
-  reader.readAsText(file);
-}
 
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -1270,7 +1264,6 @@ function importarBackup(event) {
       atualizarTela();
     }
 
-    /* GESTÃO DE CONTAS */
     function openModalConta(id = null) {
       document.getElementById('form-conta').reset();
       document.getElementById('conta-id-edit').value = "";
@@ -2125,9 +2118,16 @@ function importarBackup(event) {
       document.getElementById('transacao-id-edit').value = "";
       document.getElementById('tipo').disabled = false;
       document.getElementById('recorrente').checked = false;
-      document.getElementById('data-pagamento').value = "";
-      document.getElementById('destino-receita').value = "CARTEIRA";
-      document.getElementById('origem-transferencia').value = "CARTEIRA";
+      
+      const elDataPag = document.getElementById('data-pagamento');
+      if (elDataPag) elDataPag.value = "";
+      
+      const elDestino = document.getElementById('destino-receita');
+      if (elDestino) elDestino.value = "CARTEIRA";
+      
+      const elOrigem = document.getElementById('origem-transferencia');
+      if (elOrigem) elOrigem.value = "CARTEIRA";
+
       toggleRecorrente();
       document.getElementById('modal-transacao').classList.remove('hidden');
       toggleTipoSelect();
@@ -2148,21 +2148,26 @@ function importarBackup(event) {
       popularSubcategoriasModal();
       document.getElementById('subcategoria').value = t.subcategoria || "";
       
-      if(t.tipo === 'receita' || t.tipo === 'despesa' || t.tipo === 'transferencia') {
-        document.getElementById('destino-receita').value = t.destinoReceita || "CARTEIRA";
-      }
-      if(t.tipo === 'transferencia') {
-        document.getElementById('origem-transferencia').value = t.origemTransferencia || "CARTEIRA";
+      const elDestino = document.getElementById('destino-receita');
+      if (elDestino && (t.tipo === 'receita' || t.tipo === 'despesa' || t.tipo === 'transferencia')) {
+        elDestino.value = t.destinoReceita || "CARTEIRA";
       }
 
-      if(t.tipo === 'despesa') {
+      const elOrigem = document.getElementById('origem-transferencia');
+      if (elOrigem && t.tipo === 'transferencia') {
+        elOrigem.value = t.origemTransferencia || "CARTEIRA";
+      }
+
+      if (t.tipo === 'despesa') {
         document.getElementById('data-vencimento').value = t.data;
-        document.getElementById('data-pagamento').value = t.dataPagamento || "";
+        const elDataPag = document.getElementById('data-pagamento');
+        if (elDataPag) elDataPag.value = t.dataPagamento || "";
         document.getElementById('data-geral').value = "";
       } else {
         document.getElementById('data-geral').value = t.data;
         document.getElementById('data-vencimento').value = "";
-        document.getElementById('data-pagamento').value = "";
+        const elDataPag = document.getElementById('data-pagamento');
+        if (elDataPag) elDataPag.value = "";
       }
 
       document.getElementById('tipo').disabled = true;
@@ -2179,7 +2184,10 @@ function importarBackup(event) {
       const hoje = new Date();
       document.getElementById('data-geral').valueAsDate = hoje;
       document.getElementById('data-vencimento').valueAsDate = hoje;
-      document.getElementById('data-pagamento').value = "";
+      
+      const elDataPag = document.getElementById('data-pagamento');
+      if (elDataPag) elDataPag.value = "";
+
       document.getElementById('fatura-inicial').value = hoje.toISOString().slice(0, 7);
       
       document.getElementById('recorrente').checked = false;
@@ -2265,7 +2273,7 @@ function importarBackup(event) {
     function toggleRecorrente() {
       const recorrente = document.getElementById('recorrente').checked;
       const boxMeses = document.getElementById('box-meses-recorrente');
-      if(recorrente) boxMeses.classList.remove('hidden');
+      if (recorrente) boxMeses.classList.remove('hidden');
       else boxMeses.classList.add('hidden');
     }
 
@@ -2286,8 +2294,8 @@ function importarBackup(event) {
         htmlContas += `<option value="BANCO_${c.id}">${c.banco}</option>`;
       });
 
-      selectDestino.innerHTML = htmlContas;
-      selectOrigem.innerHTML = htmlContas;
+      if (selectDestino) selectDestino.innerHTML = htmlContas;
+      if (selectOrigem) selectOrigem.innerHTML = htmlContas;
     }
 
     function popularSubcategoriasModal() {
@@ -2299,200 +2307,197 @@ function importarBackup(event) {
       subSelect.innerHTML = '<option value="">Nenhuma</option>' + subs.map(s => `<option value="${s}">${s}</option>`).join('');
     }
 
-function salvarTransacao(e) {
-  e.preventDefault();
-  const idEdit = document.getElementById('transacao-id-edit').value;
-  const tipo = document.getElementById('tipo').value;
-  const descricaoBase = document.getElementById('descricao').value;
-  const valorTotal = parseFloat(document.getElementById('valor').value);
-  
-  // Tratamento correto de datas de acordo com o tipo de operação
-  const inputDataGeral = document.getElementById('data-geral').value;
-  const inputDataVenc = document.getElementById('data-vencimento').value;
-  const data = (tipo === 'despesa') ? inputDataVenc : inputDataGeral;
-  
-  const categoria = (tipo === 'transferencia') ? '' : document.getElementById('categoria').value;
-  const subcategoria = (tipo === 'transferencia') ? '' : document.getElementById('subcategoria').value;
-  
-  const elDataPag = document.getElementById('data-pagamento');
-  const dataPagInput = elDataPag ? elDataPag.value || null : null;
-  
-  const elDestino = document.getElementById('destino-receita');
-  const destinoReceita = (tipo === 'receita' || tipo === 'despesa' || tipo === 'transferencia') && elDestino ? elDestino.value : null;
-  
-  const elOrigem = document.getElementById('origem-transferencia');
-  const origemTransferencia = (tipo === 'transferencia') && elOrigem ? elOrigem.value : null;
-  
-  const dataHojeIso = new Date().toISOString().split('T')[0];
-
-  if (tipo === 'transferencia' && origemTransferencia === destinoReceita) {
-    alert("A Conta de Origem e a Conta de Destino não podem ser iguais!");
-    return;
-  }
-
-  if (idEdit) {
-    const index = transacoes.findIndex(t => t.id == idEdit);
-    if (index !== -1) {
-      transacoes[index].descricao = descricaoBase;
-      transacoes[index].valor = valorTotal;
-      transacoes[index].data = data;
-      transacoes[index].categoria = categoria;
-      transacoes[index].subcategoria = subcategoria;
+    function salvarTransacao(e) {
+      e.preventDefault();
+      const idEdit = document.getElementById('transacao-id-edit').value;
+      const tipo = document.getElementById('tipo').value;
+      const descricaoBase = document.getElementById('descricao').value;
+      const valorTotal = parseFloat(document.getElementById('valor').value);
       
-      if (tipo === 'receita' || tipo === 'transferencia') {
-        transacoes[index].pago = data <= dataHojeIso;
-        transacoes[index].dataPagamento = null;
-        transacoes[index].destinoReceita = destinoReceita;
-        transacoes[index].origemTransferencia = origemTransferencia;
-      } else if (tipo === 'despesa') {
-        transacoes[index].destinoReceita = destinoReceita;
-        transacoes[index].dataPagamento = dataPagInput;
-        transacoes[index].pago = dataPagInput !== null && dataPagInput !== "";
-      }
-    }
-  } else {
-    if (tipo === 'transferencia') {
-      const compraGrupoId = Date.now();
-      const isPaga = data <= dataHojeIso;
+      const inputDataGeral = document.getElementById('data-geral').value;
+      const inputDataVenc = document.getElementById('data-vencimento').value;
+      const data = (tipo === 'despesa') ? inputDataVenc : inputDataGeral;
+      
+      const categoria = (tipo === 'transferencia') ? '' : document.getElementById('categoria').value;
+      const subcategoria = (tipo === 'transferencia') ? '' : document.getElementById('subcategoria').value;
+      
+      const elDataPag = document.getElementById('data-pagamento');
+      const dataPagInput = elDataPag ? (elDataPag.value || null) : null;
+      
+      const elDestino = document.getElementById('destino-receita');
+      const destinoReceita = (tipo === 'receita' || tipo === 'despesa' || tipo === 'transferencia') && elDestino ? elDestino.value : null;
+      
+      const elOrigem = document.getElementById('origem-transferencia');
+      const origemTransferencia = (tipo === 'transferencia') && elOrigem ? elOrigem.value : null;
+      
+      const dataHojeIso = new Date().toISOString().split('T')[0];
 
-      // Registro de Saída (Origem)
-      transacoes.unshift({
-        id: Date.now(),
-        compraGrupoId: compraGrupoId,
-        tipo: 'transferencia',
-        descricao: `Transferência Enviada: ${descricaoBase}`,
-        valor: valorTotal,
-        data: data,
-        categoria: '',
-        subcategoria: '',
-        cartaoId: null,
-        origemTransferencia: origemTransferencia,
-        destinoReceita: destinoReceita,
-        pago: isPaga,
-        isSaidaTransferencia: true
-      });
-
-      // Registro de Entrada (Destino)
-      transacoes.unshift({
-        id: Date.now() + 1,
-        compraGrupoId: compraGrupoId,
-        tipo: 'transferencia',
-        descricao: `Transferência Recebida: ${descricaoBase}`,
-        valor: valorTotal,
-        data: data,
-        categoria: '',
-        subcategoria: '',
-        cartaoId: null,
-        origemTransferencia: origemTransferencia,
-        destinoReceita: destinoReceita,
-        pago: isPaga,
-        isEntradaTransferencia: true
-      });
-
-    } else if (tipo === 'cartao') {
-      if (cartoes.length === 0) {
-        alert("Cadastre pelo menos um cartão de crédito primeiro.");
+      if (tipo === 'transferencia' && origemTransferencia === destinoReceita) {
+        alert("A Conta de Origem e a Conta de Destino não podem ser iguais!");
         return;
       }
 
-      const cartaoId = parseInt(document.getElementById('cartao-id').value);
-      const cartaoObj = cartoes.find(c => c.id === cartaoId);
+      if (idEdit) {
+        const index = transacoes.findIndex(t => t.id == idEdit);
+        if (index !== -1) {
+          transacoes[index].descricao = descricaoBase;
+          transacoes[index].valor = valorTotal;
+          transacoes[index].data = data;
+          transacoes[index].categoria = categoria;
+          transacoes[index].subcategoria = subcategoria;
+          
+          if (tipo === 'receita' || tipo === 'transferencia') {
+            transacoes[index].pago = data <= dataHojeIso;
+            transacoes[index].dataPagamento = null;
+            transacoes[index].destinoReceita = destinoReceita;
+            transacoes[index].origemTransferencia = origemTransferencia;
+          } else if (tipo === 'despesa') {
+            transacoes[index].destinoReceita = destinoReceita;
+            transacoes[index].dataPagamento = dataPagInput;
+            transacoes[index].pago = dataPagInput !== null && dataPagInput !== "";
+          }
+        }
+      } else {
+        if (tipo === 'transferencia') {
+          const compraGrupoId = Date.now();
+          const isPaga = data <= dataHojeIso;
 
-      const totalComprometido = transacoes
-        .filter(t => t.tipo === 'cartao' && t.cartaoId === cartaoId && !t.pago)
-        .reduce((sum, t) => sum + t.valor, 0);
+          transacoes.unshift({
+            id: Date.now(),
+            compraGrupoId: compraGrupoId,
+            tipo: 'transferencia',
+            descricao: `Transferência Enviada: ${descricaoBase}`,
+            valor: valorTotal,
+            data: data,
+            categoria: '',
+            subcategoria: '',
+            cartaoId: null,
+            origemTransferencia: origemTransferencia,
+            destinoReceita: destinoReceita,
+            pago: isPaga,
+            isSaidaTransferencia: true
+          });
 
-      const limiteDisponivel = (cartaoObj ? cartaoObj.limite : 0) - totalComprometido;
+          transacoes.unshift({
+            id: Date.now() + 1,
+            compraGrupoId: compraGrupoId,
+            tipo: 'transferencia',
+            descricao: `Transferência Recebida: ${descricaoBase}`,
+            valor: valorTotal,
+            data: data,
+            categoria: '',
+            subcategoria: '',
+            cartaoId: null,
+            origemTransferencia: origemTransferencia,
+            destinoReceita: destinoReceita,
+            pago: isPaga,
+            isEntradaTransferencia: true
+          });
 
-      if (valorTotal > limiteDisponivel) {
-        alert(`Limite insuficiente! Limite disponível: R$ ${limiteDisponivel.toLocaleString('pt-BR', {minimumFractionDigits: 2})}.`);
-        return;
+        } else if (tipo === 'cartao') {
+          if (cartoes.length === 0) {
+            alert("Cadastre pelo menos um cartão de crédito primeiro.");
+            return;
+          }
+
+          const cartaoId = parseInt(document.getElementById('cartao-id').value);
+          const cartaoObj = cartoes.find(c => c.id === cartaoId);
+
+          const totalComprometido = transacoes
+            .filter(t => t.tipo === 'cartao' && t.cartaoId === cartaoId && !t.pago)
+            .reduce((sum, t) => sum + t.valor, 0);
+
+          const limiteDisponivel = (cartaoObj ? cartaoObj.limite : 0) - totalComprometido;
+
+          if (valorTotal > limiteDisponivel) {
+            alert(`Limite insuficiente! Limite disponível: R$ ${limiteDisponivel.toLocaleString('pt-BR', {minimumFractionDigits: 2})}.`);
+            return;
+          }
+
+          const numParcelas = parseInt(document.getElementById('num-parcelas').value);
+          const faturaInicial = document.getElementById('fatura-inicial').value;
+          const valorParcela = valorTotal / numParcelas;
+          const compraGrupoId = numParcelas > 1 ? Date.now() : null;
+
+          const [anoStr, mesStr] = faturaInicial.split('-');
+          let ano = parseInt(anoStr);
+          let mes = parseInt(mesStr) - 1;
+
+          for (let i = 1; i <= numParcelas; i++) {
+            const dataFaturaRef = new Date(ano, mes + (i - 1), 1);
+            const faturaRefStr = dataFaturaRef.toISOString().slice(0, 7);
+
+            transacoes.unshift({
+              id: Date.now() + i,
+              compraGrupoId: compraGrupoId,
+              tipo: 'cartao',
+              descricao: numParcelas > 1 ? `${descricaoBase} (${i}/${numParcelas})` : descricaoBase,
+              valor: valorParcela,
+              data: data,
+              faturaRef: faturaRefStr,
+              categoria: categoria,
+              subcategoria: subcategoria,
+              cartaoId: cartaoId,
+              pago: false
+            });
+          }
+        } else if (tipo === 'despesa' && document.getElementById('recorrente').checked) {
+          const meses = parseInt(document.getElementById('meses-recorrente').value);
+          const compraGrupoId = Date.now();
+          let [ano, mes, dia] = data.split('-');
+
+          for (let i = 0; i < meses; i++) {
+            let dataVencimento = new Date(parseInt(ano), parseInt(mes) - 1 + i, parseInt(dia));
+            let anoN = dataVencimento.getFullYear();
+            let mesN = String(dataVencimento.getMonth() + 1).padStart(2, '0');
+            let diaN = String(dataVencimento.getDate()).padStart(2, '0');
+            let dataStr = `${anoN}-${mesN}-${diaN}`;
+
+            transacoes.unshift({
+              id: Date.now() + i,
+              compraGrupoId: compraGrupoId,
+              tipo: tipo,
+              descricao: `${descricaoBase} (${i+1}/${meses})`,
+              valor: valorTotal,
+              data: dataStr,
+              categoria: categoria,
+              subcategoria: subcategoria,
+              cartaoId: null,
+              destinoReceita: destinoReceita,
+              dataPagamento: dataPagInput,
+              pago: dataPagInput !== null && dataPagInput !== ""
+            });
+          }
+        } else {
+          const isReceitaPaga = (tipo === 'receita' && data <= dataHojeIso);
+          
+          transacoes.unshift({
+            id: Date.now(),
+            compraGrupoId: null,
+            tipo: tipo,
+            descricao: descricaoBase,
+            valor: valorTotal,
+            data: data,
+            categoria: categoria,
+            subcategoria: subcategoria,
+            cartaoId: null,
+            destinoReceita: destinoReceita,
+            dataPagamento: (tipo === 'despesa') ? dataPagInput : null,
+            pago: (tipo === 'receita') ? isReceitaPaga : (dataPagInput !== null && dataPagInput !== "")
+          });
+        }
       }
 
-      const numParcelas = parseInt(document.getElementById('num-parcelas').value);
-      const faturaInicial = document.getElementById('fatura-inicial').value;
-      const valorParcela = valorTotal / numParcelas;
-      const compraGrupoId = numParcelas > 1 ? Date.now() : null;
-
-      const [anoStr, mesStr] = faturaInicial.split('-');
-      let ano = parseInt(anoStr);
-      let mes = parseInt(mesStr) - 1;
-
-      for (let i = 1; i <= numParcelas; i++) {
-        const dataFaturaRef = new Date(ano, mes + (i - 1), 1);
-        const faturaRefStr = dataFaturaRef.toISOString().slice(0, 7);
-
-        transacoes.unshift({
-          id: Date.now() + i,
-          compraGrupoId: compraGrupoId,
-          tipo: 'cartao',
-          descricao: numParcelas > 1 ? `${descricaoBase} (${i}/${numParcelas})` : descricaoBase,
-          valor: valorParcela,
-          data: data,
-          faturaRef: faturaRefStr,
-          categoria: categoria,
-          subcategoria: subcategoria,
-          cartaoId: cartaoId,
-          pago: false
-        });
-      }
-    } else if (tipo === 'despesa' && document.getElementById('recorrente').checked) {
-      const meses = parseInt(document.getElementById('meses-recorrente').value);
-      const compraGrupoId = Date.now();
-      let [ano, mes, dia] = data.split('-');
-
-      for (let i = 0; i < meses; i++) {
-        let dataVencimento = new Date(parseInt(ano), parseInt(mes) - 1 + i, parseInt(dia));
-        let anoN = dataVencimento.getFullYear();
-        let mesN = String(dataVencimento.getMonth() + 1).padStart(2, '0');
-        let diaN = String(dataVencimento.getDate()).padStart(2, '0');
-        let dataStr = `${anoN}-${mesN}-${diaN}`;
-
-        transacoes.unshift({
-          id: Date.now() + i,
-          compraGrupoId: compraGrupoId,
-          tipo: tipo,
-          descricao: `${descricaoBase} (${i+1}/${meses})`,
-          valor: valorTotal,
-          data: dataStr,
-          categoria: categoria,
-          subcategoria: subcategoria,
-          cartaoId: null,
-          destinoReceita: destinoReceita,
-          dataPagamento: dataPagInput,
-          pago: dataPagInput !== null && dataPagInput !== ""
-        });
-      }
-    } else {
-      const isReceitaPaga = (tipo === 'receita' && data <= dataHojeIso);
+      salvarStorage();
+      closeModalTransacao();
       
-      transacoes.unshift({
-        id: Date.now(),
-        compraGrupoId: null,
-        tipo: tipo,
-        descricao: descricaoBase,
-        valor: valorTotal,
-        data: data,
-        categoria: categoria,
-        subcategoria: subcategoria,
-        cartaoId: null,
-        destinoReceita: destinoReceita,
-        dataPagamento: (tipo === 'despesa') ? dataPagInput : null,
-        pago: (tipo === 'receita') ? isReceitaPaga : (dataPagInput !== null && dataPagInput !== "")
-      });
+      if(!document.getElementById('tab-relatorios').classList.contains('hidden')) gerarRelatorio();
+      if(!document.getElementById('tab-extrato').classList.contains('hidden')) gerarExtrato();
+      if(!document.getElementById('tab-projetado').classList.contains('hidden')) gerarProjetado();
+      if(!document.getElementById('tab-faturacartao').classList.contains('hidden')) gerarFaturaCartao();
+      if(!document.getElementById('tab-baixafatura').classList.contains('hidden')) carregarFaturasBaixa();
+      if(!document.getElementById('tab-despesascategoria').classList.contains('hidden')) gerarRelatorioCategorias();
     }
-  }
-
-  salvarStorage();
-  closeModalTransacao();
-  
-  if(!document.getElementById('tab-relatorios').classList.contains('hidden')) gerarRelatorio();
-  if(!document.getElementById('tab-extrato').classList.contains('hidden')) gerarExtrato();
-  if(!document.getElementById('tab-projetado').classList.contains('hidden')) gerarProjetado();
-  if(!document.getElementById('tab-faturacartao').classList.contains('hidden')) gerarFaturaCartao();
-  if(!document.getElementById('tab-baixafatura').classList.contains('hidden')) carregarFaturasBaixa();
-  if(!document.getElementById('tab-despesascategoria').classList.contains('hidden')) gerarRelatorioCategorias();
-}
 
     function toggleStatus(id) {
       const transacao = transacoes.find(t => t.id === id);
@@ -2832,7 +2837,6 @@ function salvarTransacao(e) {
         }).join('');
       }
 
-      // FILTRAGEM DO HISTÓRICO DE TRANSAÇÕES
       const filtroTipo = document.getElementById('filtro-transacoes-tipo')?.value || 'todas';
       const filtroInicio = document.getElementById('filtro-transacoes-inicio')?.value || '';
       const filtroFim = document.getElementById('filtro-transacoes-fim')?.value || '';
@@ -2852,7 +2856,6 @@ function salvarTransacao(e) {
         return true;
       });
 
-      // RENDERIZAÇÃO DA LISTA DE TRANSAÇÕES FILTRADAS
       const tabela = document.getElementById('lista-transacoes');
       if (transacoesFiltradas.length === 0) {
         tabela.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-400">Nenhum lançamento encontrado para os filtros selecionados.</td></tr>`;
@@ -2969,9 +2972,7 @@ function salvarTransacao(e) {
         }).join('');
       }
 
-      // RENDERIZAÇÃO DA TELA DE CONTAS
       const containerContas = document.getElementById('lista-contas');
-
       let somaSaldosOutrasContas = 0;
 
       const htmlContasBancarias = contas.map(c => {
@@ -3034,7 +3035,6 @@ function salvarTransacao(e) {
         `;
       }).join('');
 
-      // Cálculo da Carteira: SALDO DISPONÍVEL - SOMA DOS SALDOS DAS OUTRAS CONTAS
       const saldoCarteiraCalculado = saldoDisponivelTotal - somaSaldosOutrasContas;
 
       let cardCarteiraHtml = `
