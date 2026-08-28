@@ -997,7 +997,7 @@
     // ==========================================
     const firebaseConfig = {
       apiKey: "AIzaSyA0ritL3ALlsQk_kbwjnZfQ-VZK-jxQGx8",
-	  authDomain: "apex-finance-3a5ae.firebaseapp.com",
+      authDomain: "apex-finance-3a5ae.firebaseapp.com",
       databaseURL: "https://apex-finance-3a5ae-default-rtdb.firebaseio.com",
       projectId: "apex-finance-3a5ae",
       storageBucket: "apex-finance-3a5ae.firebasestorage.app",
@@ -1182,23 +1182,29 @@
     function importarBackup(event) {
       const file = event.target.files[0];
       if (!file) return;
+      
       const reader = new FileReader();
       reader.onload = function(e) {
         try {
           const dados = JSON.parse(e.target.result);
-          if (dados.categorias && dados.transacoes) {
+          
+          if (dados.transacoes || dados.contas || dados.cartoes) {
             contas = dados.contas || [];
             cartoes = dados.cartoes || [];
-            categorias = dados.categorias;
+            categorias = dados.categorias || [
+              "Alimentação", "Renda Extra", "Salário", "Transporte", "Lazer", "Outros", "Cartão de Crédito", "Empréstimo"
+            ];
             subcategorias = dados.subcategorias || {};
-            transacoes = dados.transacoes;
+            transacoes = dados.transacoes || [];
+
             salvarStorage();
-            alert("Dados restaurados com sucesso!");
+            alert("Dados restaurados e sincronizados com a nuvem com sucesso!");
           } else {
-            alert("Formato de arquivo inválido.");
+            alert("O arquivo selecionado não contém dados válidos do Apex Finance.");
           }
         } catch (error) {
-          alert("Erro ao ler o arquivo de backup.");
+          console.error(error);
+          alert("Erro ao ler o arquivo de backup. Verifique se o arquivo é um JSON válido.");
         }
         event.target.value = '';
       };
