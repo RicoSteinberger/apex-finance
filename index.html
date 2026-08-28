@@ -2299,188 +2299,200 @@ function importarBackup(event) {
       subSelect.innerHTML = '<option value="">Nenhuma</option>' + subs.map(s => `<option value="${s}">${s}</option>`).join('');
     }
 
-    function salvarTransacao(e) {
-      e.preventDefault();
-      const idEdit = document.getElementById('transacao-id-edit').value;
-      const tipo = document.getElementById('tipo').value;
-      const descricaoBase = document.getElementById('descricao').value;
-      const valorTotal = parseFloat(document.getElementById('valor').value);
-      const data = (tipo === 'despesa') ? document.getElementById('data-vencimento').value : document.getElementById('data-geral').value;
-      const categoria = (tipo === 'transferencia') ? '' : document.getElementById('categoria').value;
-      const subcategoria = (tipo === 'transferencia') ? '' : document.getElementById('subcategoria').value;
-      const dataPagInput = document.getElementById('data-pagamento').value || null;
-      const destinoReceita = (tipo === 'receita' || tipo === 'despesa' || tipo === 'transferencia') ? document.getElementById('destino-receita').value : null;
-      const origemTransferencia = (tipo === 'transferencia') ? document.getElementById('origem-transferencia').value : null;
-      const dataHojeIso = new Date().toISOString().split('T')[0];
+function salvarTransacao(e) {
+  e.preventDefault();
+  const idEdit = document.getElementById('transacao-id-edit').value;
+  const tipo = document.getElementById('tipo').value;
+  const descricaoBase = document.getElementById('descricao').value;
+  const valorTotal = parseFloat(document.getElementById('valor').value);
+  
+  // Tratamento correto de datas de acordo com o tipo de operação
+  const inputDataGeral = document.getElementById('data-geral').value;
+  const inputDataVenc = document.getElementById('data-vencimento').value;
+  const data = (tipo === 'despesa') ? inputDataVenc : inputDataGeral;
+  
+  const categoria = (tipo === 'transferencia') ? '' : document.getElementById('categoria').value;
+  const subcategoria = (tipo === 'transferencia') ? '' : document.getElementById('subcategoria').value;
+  
+  const elDataPag = document.getElementById('data-pagamento');
+  const dataPagInput = elDataPag ? elDataPag.value || null : null;
+  
+  const elDestino = document.getElementById('destino-receita');
+  const destinoReceita = (tipo === 'receita' || tipo === 'despesa' || tipo === 'transferencia') && elDestino ? elDestino.value : null;
+  
+  const elOrigem = document.getElementById('origem-transferencia');
+  const origemTransferencia = (tipo === 'transferencia') && elOrigem ? elOrigem.value : null;
+  
+  const dataHojeIso = new Date().toISOString().split('T')[0];
 
-      if (tipo === 'transferencia' && origemTransferencia === destinoReceita) {
-        alert("A Conta de Origem e a Conta de Destino não podem ser iguais!");
+  if (tipo === 'transferencia' && origemTransferencia === destinoReceita) {
+    alert("A Conta de Origem e a Conta de Destino não podem ser iguais!");
+    return;
+  }
+
+  if (idEdit) {
+    const index = transacoes.findIndex(t => t.id == idEdit);
+    if (index !== -1) {
+      transacoes[index].descricao = descricaoBase;
+      transacoes[index].valor = valorTotal;
+      transacoes[index].data = data;
+      transacoes[index].categoria = categoria;
+      transacoes[index].subcategoria = subcategoria;
+      
+      if (tipo === 'receita' || tipo === 'transferencia') {
+        transacoes[index].pago = data <= dataHojeIso;
+        transacoes[index].dataPagamento = null;
+        transacoes[index].destinoReceita = destinoReceita;
+        transacoes[index].origemTransferencia = origemTransferencia;
+      } else if (tipo === 'despesa') {
+        transacoes[index].destinoReceita = destinoReceita;
+        transacoes[index].dataPagamento = dataPagInput;
+        transacoes[index].pago = dataPagInput !== null && dataPagInput !== "";
+      }
+    }
+  } else {
+    if (tipo === 'transferencia') {
+      const compraGrupoId = Date.now();
+      const isPaga = data <= dataHojeIso;
+
+      // Registro de Saída (Origem)
+      transacoes.unshift({
+        id: Date.now(),
+        compraGrupoId: compraGrupoId,
+        tipo: 'transferencia',
+        descricao: `Transferência Enviada: ${descricaoBase}`,
+        valor: valorTotal,
+        data: data,
+        categoria: '',
+        subcategoria: '',
+        cartaoId: null,
+        origemTransferencia: origemTransferencia,
+        destinoReceita: destinoReceita,
+        pago: isPaga,
+        isSaidaTransferencia: true
+      });
+
+      // Registro de Entrada (Destino)
+      transacoes.unshift({
+        id: Date.now() + 1,
+        compraGrupoId: compraGrupoId,
+        tipo: 'transferencia',
+        descricao: `Transferência Recebida: ${descricaoBase}`,
+        valor: valorTotal,
+        data: data,
+        categoria: '',
+        subcategoria: '',
+        cartaoId: null,
+        origemTransferencia: origemTransferencia,
+        destinoReceita: destinoReceita,
+        pago: isPaga,
+        isEntradaTransferencia: true
+      });
+
+    } else if (tipo === 'cartao') {
+      if (cartoes.length === 0) {
+        alert("Cadastre pelo menos um cartão de crédito primeiro.");
         return;
       }
 
-      if (idEdit) {
-        const index = transacoes.findIndex(t => t.id == idEdit);
-        if (index !== -1) {
-          transacoes[index].descricao = descricaoBase;
-          transacoes[index].valor = valorTotal;
-          transacoes[index].data = data;
-          transacoes[index].categoria = categoria;
-          transacoes[index].subcategoria = subcategoria;
-          
-          if (tipo === 'receita' || tipo === 'transferencia') {
-            transacoes[index].pago = data <= dataHojeIso;
-            transacoes[index].dataPagamento = null;
-            transacoes[index].destinoReceita = destinoReceita;
-            transacoes[index].origemTransferencia = origemTransferencia;
-          } else if (tipo === 'despesa') {
-            transacoes[index].destinoReceita = destinoReceita;
-            transacoes[index].dataPagamento = dataPagInput;
-            transacoes[index].pago = dataPagInput !== null && dataPagInput !== "";
-          }
-        }
-      } else {
-        if (tipo === 'transferencia') {
-          const compraGrupoId = Date.now();
-          const isPaga = data <= dataHojeIso;
+      const cartaoId = parseInt(document.getElementById('cartao-id').value);
+      const cartaoObj = cartoes.find(c => c.id === cartaoId);
 
-          // Registro de Saída (Origem)
-          transacoes.unshift({
-            id: Date.now(),
-            compraGrupoId: compraGrupoId,
-            tipo: 'transferencia',
-            descricao: `Transferência Enviada: ${descricaoBase}`,
-            valor: valorTotal,
-            data: data,
-            categoria: '',
-            subcategoria: '',
-            cartaoId: null,
-            origemTransferencia: origemTransferencia,
-            destinoReceita: destinoReceita,
-            pago: isPaga,
-            isSaidaTransferencia: true
-          });
+      const totalComprometido = transacoes
+        .filter(t => t.tipo === 'cartao' && t.cartaoId === cartaoId && !t.pago)
+        .reduce((sum, t) => sum + t.valor, 0);
 
-          // Registro de Entrada (Destino)
-          transacoes.unshift({
-            id: Date.now() + 1,
-            compraGrupoId: compraGrupoId,
-            tipo: 'transferencia',
-            descricao: `Transferência Recebida: ${descricaoBase}`,
-            valor: valorTotal,
-            data: data,
-            categoria: '',
-            subcategoria: '',
-            cartaoId: null,
-            origemTransferencia: origemTransferencia,
-            destinoReceita: destinoReceita,
-            pago: isPaga,
-            isEntradaTransferencia: true
-          });
+      const limiteDisponivel = (cartaoObj ? cartaoObj.limite : 0) - totalComprometido;
 
-        } else if (tipo === 'cartao') {
-          if (cartoes.length === 0) {
-            alert("Cadastre pelo menos um cartão de crédito primeiro.");
-            return;
-          }
-
-          const cartaoId = parseInt(document.getElementById('cartao-id').value);
-          const cartaoObj = cartoes.find(c => c.id === cartaoId);
-
-          const totalComprometido = transacoes
-            .filter(t => t.tipo === 'cartao' && t.cartaoId === cartaoId && !t.pago)
-            .reduce((sum, t) => sum + t.valor, 0);
-
-          const limiteDisponivel = (cartaoObj ? cartaoObj.limite : 0) - totalComprometido;
-
-          if (valorTotal > limiteDisponivel) {
-            alert(`Limite insuficiente! Limite disponível: R$ ${limiteDisponivel.toLocaleString('pt-BR', {minimumFractionDigits: 2})}.`);
-            return;
-          }
-
-          const numParcelas = parseInt(document.getElementById('num-parcelas').value);
-          const faturaInicial = document.getElementById('fatura-inicial').value;
-          const valorParcela = valorTotal / numParcelas;
-          const compraGrupoId = numParcelas > 1 ? Date.now() : null;
-
-          const [anoStr, mesStr] = faturaInicial.split('-');
-          let ano = parseInt(anoStr);
-          let mes = parseInt(mesStr) - 1;
-
-          for (let i = 1; i <= numParcelas; i++) {
-            const dataFaturaRef = new Date(ano, mes + (i - 1), 1);
-            const faturaRefStr = dataFaturaRef.toISOString().slice(0, 7);
-
-            transacoes.unshift({
-              id: Date.now() + i,
-              compraGrupoId: compraGrupoId,
-              tipo: 'cartao',
-              descricao: numParcelas > 1 ? `${descricaoBase} (${i}/${numParcelas})` : descricaoBase,
-              valor: valorParcela,
-              data: data,
-              faturaRef: faturaRefStr,
-              categoria: categoria,
-              subcategoria: subcategoria,
-              cartaoId: cartaoId,
-              pago: false
-            });
-          }
-        } else if (tipo === 'despesa' && document.getElementById('recorrente').checked) {
-          const meses = parseInt(document.getElementById('meses-recorrente').value);
-          const compraGrupoId = Date.now();
-          let [ano, mes, dia] = data.split('-');
-
-          for (let i = 0; i < meses; i++) {
-            let dataVencimento = new Date(parseInt(ano), parseInt(mes) - 1 + i, parseInt(dia));
-            let anoN = dataVencimento.getFullYear();
-            let mesN = String(dataVencimento.getMonth() + 1).padStart(2, '0');
-            let diaN = String(dataVencimento.getDate()).padStart(2, '0');
-            let dataStr = `${anoN}-${mesN}-${diaN}`;
-
-            transacoes.unshift({
-              id: Date.now() + i,
-              compraGrupoId: compraGrupoId,
-              tipo: tipo,
-              descricao: `${descricaoBase} (${i+1}/${meses})`,
-              valor: valorTotal,
-              data: dataStr,
-              categoria: categoria,
-              subcategoria: subcategoria,
-              cartaoId: null,
-              destinoReceita: destinoReceita,
-              dataPagamento: dataPagInput,
-              pago: dataPagInput !== null && dataPagInput !== ""
-            });
-          }
-        } else {
-          const isReceitaPaga = (tipo === 'receita' && data <= dataHojeIso);
-          
-          transacoes.unshift({
-            id: Date.now(),
-            compraGrupoId: null,
-            tipo: tipo,
-            descricao: descricaoBase,
-            valor: valorTotal,
-            data: data,
-            categoria: categoria,
-            subcategoria: subcategoria,
-            cartaoId: null,
-            destinoReceita: destinoReceita,
-            dataPagamento: (tipo === 'despesa') ? dataPagInput : null,
-            pago: (tipo === 'receita') ? isReceitaPaga : (dataPagInput !== null && dataPagInput !== "")
-          });
-        }
+      if (valorTotal > limiteDisponivel) {
+        alert(`Limite insuficiente! Limite disponível: R$ ${limiteDisponivel.toLocaleString('pt-BR', {minimumFractionDigits: 2})}.`);
+        return;
       }
 
-      salvarStorage();
-      closeModalTransacao();
+      const numParcelas = parseInt(document.getElementById('num-parcelas').value);
+      const faturaInicial = document.getElementById('fatura-inicial').value;
+      const valorParcela = valorTotal / numParcelas;
+      const compraGrupoId = numParcelas > 1 ? Date.now() : null;
+
+      const [anoStr, mesStr] = faturaInicial.split('-');
+      let ano = parseInt(anoStr);
+      let mes = parseInt(mesStr) - 1;
+
+      for (let i = 1; i <= numParcelas; i++) {
+        const dataFaturaRef = new Date(ano, mes + (i - 1), 1);
+        const faturaRefStr = dataFaturaRef.toISOString().slice(0, 7);
+
+        transacoes.unshift({
+          id: Date.now() + i,
+          compraGrupoId: compraGrupoId,
+          tipo: 'cartao',
+          descricao: numParcelas > 1 ? `${descricaoBase} (${i}/${numParcelas})` : descricaoBase,
+          valor: valorParcela,
+          data: data,
+          faturaRef: faturaRefStr,
+          categoria: categoria,
+          subcategoria: subcategoria,
+          cartaoId: cartaoId,
+          pago: false
+        });
+      }
+    } else if (tipo === 'despesa' && document.getElementById('recorrente').checked) {
+      const meses = parseInt(document.getElementById('meses-recorrente').value);
+      const compraGrupoId = Date.now();
+      let [ano, mes, dia] = data.split('-');
+
+      for (let i = 0; i < meses; i++) {
+        let dataVencimento = new Date(parseInt(ano), parseInt(mes) - 1 + i, parseInt(dia));
+        let anoN = dataVencimento.getFullYear();
+        let mesN = String(dataVencimento.getMonth() + 1).padStart(2, '0');
+        let diaN = String(dataVencimento.getDate()).padStart(2, '0');
+        let dataStr = `${anoN}-${mesN}-${diaN}`;
+
+        transacoes.unshift({
+          id: Date.now() + i,
+          compraGrupoId: compraGrupoId,
+          tipo: tipo,
+          descricao: `${descricaoBase} (${i+1}/${meses})`,
+          valor: valorTotal,
+          data: dataStr,
+          categoria: categoria,
+          subcategoria: subcategoria,
+          cartaoId: null,
+          destinoReceita: destinoReceita,
+          dataPagamento: dataPagInput,
+          pago: dataPagInput !== null && dataPagInput !== ""
+        });
+      }
+    } else {
+      const isReceitaPaga = (tipo === 'receita' && data <= dataHojeIso);
       
-      if(!document.getElementById('tab-relatorios').classList.contains('hidden')) gerarRelatorio();
-      if(!document.getElementById('tab-extrato').classList.contains('hidden')) gerarExtrato();
-      if(!document.getElementById('tab-projetado').classList.contains('hidden')) gerarProjetado();
-      if(!document.getElementById('tab-faturacartao').classList.contains('hidden')) gerarFaturaCartao();
-      if(!document.getElementById('tab-baixafatura').classList.contains('hidden')) carregarFaturasBaixa();
-      if(!document.getElementById('tab-despesascategoria').classList.contains('hidden')) gerarRelatorioCategorias();
+      transacoes.unshift({
+        id: Date.now(),
+        compraGrupoId: null,
+        tipo: tipo,
+        descricao: descricaoBase,
+        valor: valorTotal,
+        data: data,
+        categoria: categoria,
+        subcategoria: subcategoria,
+        cartaoId: null,
+        destinoReceita: destinoReceita,
+        dataPagamento: (tipo === 'despesa') ? dataPagInput : null,
+        pago: (tipo === 'receita') ? isReceitaPaga : (dataPagInput !== null && dataPagInput !== "")
+      });
     }
+  }
+
+  salvarStorage();
+  closeModalTransacao();
+  
+  if(!document.getElementById('tab-relatorios').classList.contains('hidden')) gerarRelatorio();
+  if(!document.getElementById('tab-extrato').classList.contains('hidden')) gerarExtrato();
+  if(!document.getElementById('tab-projetado').classList.contains('hidden')) gerarProjetado();
+  if(!document.getElementById('tab-faturacartao').classList.contains('hidden')) gerarFaturaCartao();
+  if(!document.getElementById('tab-baixafatura').classList.contains('hidden')) carregarFaturasBaixa();
+  if(!document.getElementById('tab-despesascategoria').classList.contains('hidden')) gerarRelatorioCategorias();
+}
 
     function toggleStatus(id) {
       const transacao = transacoes.find(t => t.id === id);
